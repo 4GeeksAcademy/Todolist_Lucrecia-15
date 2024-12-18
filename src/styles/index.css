@@ -1,12 +1,56 @@
+.todoList{
+    text-align: center;
+    font-family:italic ;
+    color: gray;
 
-/* 
+}
+.container{
+    width:400px;
+    height: 400px;
+    background: gainsboro;
+    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.2);
+    opacity: 0.5;
+    overflow-x:hidden;
+}
 
-    You can write your own styles here...
+.write{
+    width: 300px;
+    border: none;
+    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    left: 39px;
+    top: 25px;
+    font-family:italic;
     
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+}
 
-*/
+.list{
+    padding: 10px;
+    color: gray;
+    list-style-type:none;
+    position: relative;
+    left: 39px;
+    top: 25px; 
+      
+}
+
+  .delete {
+    border: none;
+    opacity: 0.5;
+    position: relative;
+    left: 260px;
+    bottom: 25px;
+    display: none; 
+    
+  }
+  
+
+.list li:hover .delete {
+    display: block; 
+    cursor: pointer;
+    height: 0px;
+  }
+.tarea{
+    position: absolute;
+    left: 50px;    
+  }

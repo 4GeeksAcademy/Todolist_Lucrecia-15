@@ -1,26 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 const Home = () => {
+	const [text, setText] = useState('')
+	const [search, setSearch] = useState([])
+	const handleChange = (e) => {
+		setText(e.target.value);
+	};
+
+	const handleKeyDown = (e) => {
+		if (e.key === 'Enter') {
+
+			setSearch([...search, text]);
+			setText('');
+
+		}
+
+	};
+
+
+	const handleDelete = (index) => {
+		setSearch(search.filter((_, i) => i !== index));
+	}
+
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="text">
+			<h1 className="todoList">Todo list!</h1>
+			<div className="container">
+				<input
+					type="text"
+					className="write"
+					placeholder="Escriba aquí!"
+					value={text}
+					onChange={handleChange}
+					onKeyDown={handleKeyDown}
+
+				/>
+				<ul className="list">
+					{search.length === 0 ? (
+						<div className="tarea">"No hay tareas pendientes"</div>
+					) : (
+						search.map((item, index) => (
+							<li key={index}>
+								{item}
+								<button className="delete" onClick={() => handleDelete(index)}>✘</button>
+							</li>
+						))
+					)}
+				</ul>
+			</div>
 		</div>
 	);
 };
-
-export default Home;
+export default Home
