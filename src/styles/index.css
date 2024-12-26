@@ -1,56 +1,81 @@
-.todoList{
-    text-align: center;
-    font-family:italic ;
-    color: gray;
+.todoList {
+  text-align: center;
+  font-family: italic;
+  color: gray;
+  text-shadow: 1px 1px 2px gray;
 
 }
-.container{
-    width:400px;
-    height: 400px;
-    background: gainsboro;
-    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.2);
-    opacity: 0.5;
-    overflow-x:hidden;
+
+.container {
+  width: 400px;
+  height: 400px;
+  background: gainsboro;
+  box-shadow: 4px 10px 4px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  margin-bottom: none;
 }
 
-.write{
-    width: 300px;
-    border: none;
-    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.2);
-    position: relative;
-    left: 39px;
-    top: 25px;
-    font-family:italic;
-    
+.container img {
+  margin: -10px;
+  padding-bottom: 30px;
 }
 
-.list{
-    padding: 10px;
-    color: gray;
-    list-style-type:none;
-    position: relative;
-    left: 39px;
-    top: 25px; 
-      
+.card-container {
+  height: 45rem;
+  width: 35rem;
+  border: 2px solid #fafafa10;
 }
 
-  .delete {
-    border: none;
-    opacity: 0.5;
-    position: relative;
-    left: 260px;
-    bottom: 25px;
-    display: none; 
-    
-  }
-  
+.glass-effect {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(0.4rem);
+  -webkit-backdrop-filter: blur(0.4rem);
+}
+
+.write {
+  width: 300px;
+  border: none;
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  left: 39px;
+  top: -370px;
+  font-family: italic;
+
+}
+
+.list {
+  padding: 10px;
+  color: white;
+  list-style-type: none;
+  position: relative;
+  left: 39px;
+  top: -350px;
+}
+
+.delete {
+  border: none;
+  position: relative;
+  left: 260px;
+  bottom: 25px;
+  display: none;
+  color: black;
+  opacity: 0.5;
+}
+
 
 .list li:hover .delete {
-    display: block; 
-    cursor: pointer;
-    height: 0px;
-  }
-.tarea{
-    position: absolute;
-    left: 50px;    
-  }
+  display: block;
+  cursor: pointer;
+}
+
+.tarea {
+  position: absolute;
+  left: 50px;
+}
+
+.AllDelete {
+  position: relative;
+  top: -330px;
+  left: 150px;
+  box-shadow: 2px 3px 2px lightcyan;
+}
