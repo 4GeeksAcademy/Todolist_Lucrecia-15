@@ -1,151 +1,129 @@
 import React, { useEffect, useState } from "react";
 
-//create your first component
+// create your first component
 const Home = () => {
-	const [text, setText] = useState('');
-	const [search, setSearch] = useState([]);
-	const username = 'Lucrecia-15';
+  const [text, setText] = useState([]); // Lista de tareas
+  const [search, setSearch] = useState(""); // Tarea a agregar
+  const username = "Lucrecia-15";
 
-	const handleChange = (e) => {
-		setText(e.target.value);
-	};
+  const handleDelete = async (id) => {
+    try {
+      // Elimina solo la tarea correspondiente
+      await fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+        method: "DELETE",
+        body: JSON.stringify({ id }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-	const handleKeyDown = (e) => {
-		if (e.key === 'Enter') {
-			const newTask = { label: text, is_done: false };
-			setSearch(prevSearch => [...prevSearch, newTask]);
-			setText('');
-			addTask(newTask);
-		}
-	};
+      // Filtra las tareas localmente
+      const newTodos = text.filter((todo) => todo.id !== id);
+      setText(newTodos); // Actualiza el estado con las tareas restantes
+      console.log("Tarea eliminada:", id); // Para verificar la eliminación
+    } catch (err) {
+      console.error("Error al eliminar tarea:", err);
+    }
+  };
 
-	const handleDelete = async (index) => {
-		try {
-			const newTodos = search.filter((_, i) => i !== index);
-			setSearch(newTodos);
-			// Actualización de tareas
-			fetch(`https://playground.4geeks.com/todo/todos/${username}`, {
-				method: "PUT",
-				body: JSON.stringify(newTodos),
-				headers: {
-					"Content-Type": "application/json"
-				}
-			})
-				.then(resp => resp.json())
-				.then(data => {
-					console.log(data); // Muestra la respuesta del servidor después de la actualización
-				})
-				.catch(error => {
-					console.error("Error al sincronizar las tareas:", error);
-				});
-		} catch (err) {
-			console.error("Error al eliminar tarea:", err);
-		}
-	};
+  const AllDelete = async () => {
 
-	const AllDelete = async () => {
-		setSearch([]);
-		// La eliminación de todas las tareas
-		fetch(`https://playground.4geeks.com/todo/todos/${username}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json"
-			}
-		})
-			.then(resp => resp.json())
-			.then(data => {
-				console.log(data); // Muestra la respuesta del servidor
-			})
-			.catch(error => {
-				console.error("Error al eliminar todas las tareas:", error);
-			});
-	}
+    await fetch(`https://playground.4geeks.com/todo/users/${username}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setText([]); // Vacía el estado de las tareas
+    console.log("Todas las tareas han sido eliminadas");
+  }
 
-	const addTask = () => {
-		const newTask = { label: text, is_done: false };
-		const updatedTodos = [...search, newTask];
-		setSearch(updatedTodos);
-		setText('');
 
-		const options = {
-			method: "PUT",
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(updatedTodos)
-		};
+  const addTask = async () => {
+    if (search !== "") {
+      const response = await fetch(
+        `https://playground.4geeks.com/todo/todos/${username}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            label: search,
+            is_done: false,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      bringHomework(); // Vuelve a traer las tareas después de agregar la nueva
+      setSearch(""); // Limpia el campo de entrada
+    }
+  };
 
-		// Aquí para para agregar tareas
-		fetch(`https://playground.4geeks.com/todo/todos/${username}`, options)
-			.then(response => response.json())
-			.then(data => {
-				console.log("Tareas sincronizadas:", data);
-			})
-			.catch(err => console.error("Error al agregar tarea:", err));
-	};
+  useEffect(() => {
+    bringHomework();
+  }, []);
 
-	const bringHomework = async () => {
-		try {
-			// Aquí para obtener las tareas
-			const response = await fetch(`https://playground.4geeks.com/todo/todos/${username}`);
-			if (response.ok) {
-				const data = await response.json();
-				setSearch(data);
-			} else {
-				await createTodoList();
-				setSearch([]);
-			}
-		} catch (err) {
-			console.error("Error al cargar las tareas:", err);
-		}
-	};
+  const bringHomework = async () => {
+    // Aquí para obtener las tareas
+    const response = await fetch(
+      `https://playground.4geeks.com/todo/users/${username}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      setText(data.todos);
+    } else {
+      createTodoList();
+      console.error("Error al traer las tareas:", response.statusText); //actualizo el estado de la API
+    }
+  };
 
-	const createTodoList = async () => {
-		try {
-			// Para crear la lista de tareas
-			const response = await fetch(`https://playground.4geeks.com/todo/todos/${username}`, { method: "POST" });
-			if (response.ok) {
-				console.log("Lista de tareas creada con éxito");
-			} else {
-				console.error("Error al crear la lista de tareas:", response.status);
-			}
-		} catch (err) {
-			console.error("Error al crear la lista de tareas:", err);
-		}
-	};
+  const createTodoList = async () => {
+    // Para crear la lista de tareas si no existe
+    const response = await fetch(
+      `https://playground.4geeks.com/todo/users/${username}`,
+      { method: "POST" }
+    );
+    const data = await response.json();
+  };
 
-	useEffect(() => {
-		bringHomework();
-	}, []);
-
-	return (
-		<div className="text">
-			<h1 className="todoList">Todo list!</h1>
-			<div className="container"><img src="https://img.freepik.com/foto-gratis/fondo-pantalla-abstracto-nebulosa-ultra-detallado-6_1562-751.jpg" alt="" />
-				<div className="card-container glass-effect">
-					<input
-						type="text"
-						className="write"
-						placeholder="Escriba aquí!"
-						value={text}
-						onChange={handleChange}
-						onKeyDown={handleKeyDown}
-					/>
-					<ul className="list">
-						{search.length === 0 ? (
-							<div className="tarea">"No hay tareas pendientes"</div>
-						) : (
-							search.map((item, index) => (
-								<li key={index}>
-									{item.label}
-									<button className="delete" onClick={() => handleDelete(index)}>✘</button>
-								</li>
-							))
-						)}
-					</ul>
-					<button className="AllDelete" onClick={AllDelete}>Delete All</button>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="text">
+      <h1 className="todoList">Todo list!</h1>
+      <input
+        type="text"
+        className="write"
+        placeholder="Escriba aquí!"
+        value={search}
+        onChange={(event) => setSearch(event.target.value)} // Actualiza el estado de la tarea
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && search !== "") {
+            console.log("Ahora agrego la tarea en la API");
+            addTask();
+          }
+        }}
+      />
+      <ul>
+        {text.map((texts) => {
+          return (
+            <li className="list" key={texts.id}>
+              {texts.label}{" "}
+              <button className="Button" onClick={() => {
+                console.log("Eliminar la tarea: " + texts.id);
+                handleDelete(texts.id); // Elimina la tarea al hacer clic usando su ID
+              }}
+              >
+                X
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <button className="AllDelete" onClick={AllDelete}>
+        Delete All
+      </button>
+    </div>
+  );
 };
 
 export default Home;
