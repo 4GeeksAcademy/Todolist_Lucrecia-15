@@ -34,7 +34,8 @@ const Home = () => {
         "Content-Type": "application/json",
       },
     });
-    setText([]); // Vacía el estado de las tareas
+    setText([]);// Vacía el estado de las tareas
+    createTodoList()
     console.log("Todas las tareas han sido eliminadas");
   }
 
